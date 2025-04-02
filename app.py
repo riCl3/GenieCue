@@ -11,23 +11,22 @@ st.set_page_config(
     layout="wide",
 )
 
-# Custom CSS for a modern UI
+# Custom CSS for a modern UI that adapts to both light and dark modes
 st.markdown("""
 <style>
-    /* Modern color scheme */
+    /* Modern color scheme - adaptive to light/dark mode */
     :root {
         --primary: #6366F1;
         --primary-hover: #818CF8;
         --secondary: #2DD4BF;
-        --dark: #1E293B;
-        --light: #F8FAFC;
-        --card-bg: rgba(255, 255, 255, 0.05);
-        --card-border: rgba(255, 255, 255, 0.1);
+        --card-border: rgba(128, 128, 128, 0.2);
     }
 
-    .main {
-        background-color: var(--dark);
-        color: var(--light);
+    /* Adapt to Streamlit's theme variables */
+    .movie-card, .search-container, .feature-box, .selected-movie {
+        background-color: var(--st-color-background-secondary);
+        border: 1px solid var(--card-border);
+        color: var(--st-color-text);
     }
 
     /* Header styles */
@@ -37,7 +36,7 @@ st.markdown("""
         padding: 1.5rem 0;
         background: linear-gradient(90deg, var(--primary), var(--secondary));
         border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         position: relative;
         overflow: hidden;
     }
@@ -46,14 +45,12 @@ st.markdown("""
         font-weight: 800;
         font-size: 3rem;
         margin: 0;
-        background: linear-gradient(to right, #FFFFFF, #E2E8F0);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: white !important; /* Force white text on gradient background */
         display: inline-block;
     }
 
     .title-container p {
-        color: rgba(255, 255, 255, 0.9);
+        color: white !important; /* Force white text on gradient background */
         font-size: 1.1rem;
         margin-top: 0.5rem;
     }
@@ -66,8 +63,6 @@ st.markdown("""
     }
 
     .movie-card {
-        background: var(--card-bg);
-        border: 1px solid var(--card-border);
         border-radius: 12px;
         overflow: hidden;
         transition: all 0.3s ease;
@@ -79,7 +74,7 @@ st.markdown("""
 
     .movie-card:hover {
         transform: translateY(-8px);
-        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
         border-color: var(--primary);
     }
 
@@ -105,12 +100,11 @@ st.markdown("""
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
-        color: white;
     }
 
     .movie-meta {
         font-size: 0.8rem;
-        color: rgba(255, 255, 255, 0.7);
+        opacity: 0.8;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -127,7 +121,7 @@ st.markdown("""
     /* Button styles */
     .custom-button {
         background: linear-gradient(90deg, var(--primary), var(--secondary));
-        color: white;
+        color: white !important;
         border: none;
         padding: 10px 20px;
         border-radius: 8px;
@@ -146,11 +140,9 @@ st.markdown("""
 
     /* Search box styles */
     .search-container {
-        background: rgba(255, 255, 255, 0.05);
         padding: 20px;
         border-radius: 12px;
         margin-bottom: 2rem;
-        border: 1px solid var(--card-border);
     }
 
     /* Section styles */
@@ -169,7 +161,7 @@ st.markdown("""
         text-align: center;
         padding: 2rem 0;
         border-top: 1px solid var(--card-border);
-        color: rgba(255, 255, 255, 0.6);
+        opacity: 0.8;
     }
 
     /* Updated creator attribution */
@@ -178,7 +170,7 @@ st.markdown("""
         margin: 0 0 10px 0;
         padding: 8px 16px;
         display: inline-block;
-        background: linear-gradient(90deg, rgba(99, 102, 241, 0.15), rgba(45, 212, 191, 0.15));
+        background-color: var(--st-color-background-secondary);
         border-radius: 8px;
         border-left: 4px solid var(--primary);
     }
@@ -199,30 +191,20 @@ st.markdown("""
         text-decoration: underline;
     }
 
-    /* Selectbox styling */
-    div[data-baseweb="select"] {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        border-radius: 8px !important;
-    }
-
-    div[data-baseweb="select"] > div {
-        background-color: transparent !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        color: white !important;
-    }
-
-    /* Updated feature box with margin */
+    /* Feature box with margin */
     .feature-box {
-        background: rgba(255, 255, 255, 0.05);
         border-radius: 12px;
         padding: 20px;
         margin-bottom: 30px;
         display: flex;
         align-items: center;
         gap: 15px;
-        border: 1px solid var(--card-border);
         flex: 1;
         max-width: 48%;
+    }
+
+    .feature-box h3, .feature-box p {
+        color: var(--st-color-text);
     }
 
     /* Feature box container with space between */
@@ -239,11 +221,26 @@ st.markdown("""
     }
 
     .selected-movie {
-        background: linear-gradient(to right, rgba(99, 102, 241, 0.1), rgba(45, 212, 191, 0.1));
+        background: linear-gradient(to right, 
+            rgba(99, 102, 241, 0.1), 
+            rgba(45, 212, 191, 0.1));
         border-radius: 12px;
         padding: 20px;
         margin: 20px 0;
-        border: 1px solid var(--card-border);
+    }
+
+    /* Updated match percentage to be visible in both modes */
+    .match-percentage {
+        color: var(--primary);
+        font-size: 0.8rem;
+        margin-top: 8px;
+        font-weight: 500;
+    }
+
+    /* Ensure readable text in both dark and light modes */
+    .stMarkdown, .stSelectbox, .stButton, 
+    p, h1, h2, h3, h4, h5, h6, span, li {
+        color: var(--st-color-text);
     }
 
     /* Animations */
@@ -307,7 +304,7 @@ def recommend(movie):
             movie_title = new_df.iloc[i[0]].title
             poster_url = fetch_poster(movie_id)
             details = get_movie_details(movie_id)
-            similarity_score = distances[i[0] - distances[1][0] + 1][1]
+            similarity_score = i[1]  # Get similarity score directly
 
             recommended_movies.append({
                 "title": movie_title,
@@ -406,7 +403,6 @@ if selected_movie:
         col1, col2 = st.columns([1, 3])
 
         with col1:
-            # Fixed deprecated parameter
             st.image(poster_url, use_container_width=True)
 
         with col2:
@@ -454,7 +450,7 @@ if search_button:
                         <span>{movie['year']}</span>
                         <span class="rating">⭐ {movie['rating']}</span>
                     </div>
-                    <div style="font-size: 0.8rem; margin-top: 8px; color: var(--primary);">
+                    <div class="match-percentage">
                         {movie['similarity']}% match
                     </div>
                 </div>
