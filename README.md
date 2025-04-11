@@ -1,142 +1,132 @@
-# MovieRecommendation
-# GenieCue: A Versatile Cue Management System
+# 🎬 GenieCue — Movie Recommendation App
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Python Version](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
+GenieCue is a **modern, ML-powered movie recommendation system** built with **Streamlit** that helps users discover movies similar to their favorites in a sleek, interactive interface. Whether you're into thrillers, rom-coms, or indie gems, GenieCue has a recommendation for you!
 
-**GenieCue** is a Python-based cue management system designed to simplify and streamline the process of handling cues, particularly in live performance settings like theater, presentations, and events. It provides a simple, extensible framework for defining, managing, and executing cues with ease.
+![GenieCue Demo](assets/geniecue-demo.gif) <!-- Replace with your actual screenshot or gif path -->
 
-## Introduction
+---
 
-Managing cues during a live performance can be challenging. GenieCue aims to alleviate this burden by offering a structured and flexible approach. Whether you're a seasoned professional or a beginner, GenieCue's intuitive design makes it easy to integrate into your workflow.
+## 🚀 Live Demo
 
-This project is built with simplicity and extensibility in mind. You can define various types of cues, manage their execution, and even extend the system with custom cue types to suit your specific needs.
+👉 [Try it now on Streamlit Cloud](https://geniecue.streamlit.app)  
+*(Replace with your actual link once deployed)*
 
-## Features
+---
 
-* **Simple Cue Definition:** Easily define cues with clear parameters and actions.
-* **Extensible Architecture:** Add custom cue types to handle unique requirements.
-* **Sequential Execution:** Execute cues in a predefined order.
-* **Flexible Timing:** Implement delays and other timing-based actions.
-* **Clear Logging:** Provides feedback and logging for debugging and monitoring.
-* **Beginner Friendly:** Designed to be easy to understand and use.
+## 📌 Features
 
-## Getting Started
+- 🔍 **Search & Recommend:** Instantly get top 5 movie recommendations based on your selection.
+- 🧠 **ML-Driven:** Uses NLP and cosine similarity to compute recommendations.
+- 🎨 **Modern UI:** Built with Streamlit for an intuitive and clean user interface.
+- ⚡ **Fast Performance:** Loads data from preprocessed pickle files for instant results.
+- 🌐 **Deployable Anywhere:** Streamlit allows for one-click cloud deployment.
 
-### Prerequisites
+---
 
-* Python 3.7 or later
+## 🛠️ Tech Stack
 
-### Installation
+| Layer        | Technology                           |
+|--------------|---------------------------------------|
+| Frontend     | [Streamlit](https://streamlit.io)     |
+| Backend      | Python, `pickle`, Pandas, scikit-learn|
+| ML Model     | TF-IDF + Cosine Similarity            |
+| Deployment   | Streamlit Cloud / Local Host          |
 
-1.  Clone the repository:
+---
 
-    ```bash
-    git clone [https://github.com/riCl3/GenieCue.git](https://www.google.com/search?q=https://github.com/riCl3/GenieCue.git)
-    cd GenieCue
-    ```
+## 🧠 How It Works
 
-2.  (Optional) Create a virtual environment:
+1. The dataset is processed to extract relevant movie features like genres, overview, keywords, cast, etc.
+2. A **TF-IDF Vectorizer** is used to convert the text features into numerical vectors.
+3. **Cosine similarity** is calculated between all movie vectors to determine similarity.
+4. When a user selects a movie, the top 5 most similar ones are recommended.
 
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate  # On Linux/macOS
-    venv\Scripts\activate  # On Windows
-    ```
+The entire model logic is available in the [`MovieRecommendation.ipynb`](MovieRecommendation.ipynb) file.
 
-3.  Install dependencies (if any, as this project is very simple currently):
+---
 
-    ```bash
-    # If there are any dependencies listed in a requirements.txt file, install them with:
-    # pip install -r requirements.txt
-    ```
+## 📁 Project Structure
 
-### Basic Usage
+GenieCue/ ├── app.py # Streamlit frontend ├── MovieRecommendation.ipynb # Model development and training ├── similarity.pkl # Precomputed similarity matrix ├── movie_dict.pkl # Preprocessed movie dataset ├── assets/ │ └── geniecue-demo.gif # Demo animation or screenshot ├── requirements.txt # Python dependencies └── README.md # You're here!
 
-1.  **Define Cues:** Create cue definitions in your Python script. For example, you might create cues to print messages, control external devices, or execute other actions.
-2.  **Manage Cues:** Use the provided cue management functions to add, modify, and execute cues.
-3.  **Run Cues:** Execute the cues in your desired sequence.# geniecue.py
-import time
-from typing import Callable, List
 
-class Cue:
-    """
-    Represents a single cue with an action to execute.
-    """
-    def __init__(self, action: Callable[[], None]):
-        self.action = action
+---
 
-    def execute(self):
-        """
-        Executes the cue's action.
-        """
-        self.action()
+## 📦 Installation & Local Setup
 
-class CueManager:
-    """
-    Manages a sequence of cues and executes them.
-    """
-    def __init__(self):
-        self.cues: List[Cue] = []
+> Run the app locally on your machine with the following steps:
 
-    def add_cue(self, cue: Cue):
-        """
-        Adds a cue to the cue manager.
-        """
-        self.cues.append(cue)
+### 1. Clone the Repository
 
-    def run_cues(self):
-        """
-        Executes all cues in the order they were added.
-        """
-        for cue in self.cues:
-            cue.execute()
+```bash
+git clone https://github.com/your-username/geniecue.git
+cd geniecue
+```
+2. Install Dependencies
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Launch the App
+```bash
+streamlit run app.py
+```
 
-# custom_cue.py (example of extending)
-class DelayedMessageCue(Cue):
-    def __init__(self, message, delay):
-        super().__init__(action=self.delayed_print)
-        self.message = message
-        self.delay = delay
+☁️ Deployment on Streamlit Cloud
+To deploy GenieCue publicly:
 
-    def delayed_print(self):
-        time.sleep(self.delay)
-        print(self.message)
+Push your code to GitHub
 
-# example_usage.py (example of usage)
-def print_message(message):
-    print(message)
+Go to Streamlit Cloud
 
-cue1 = Cue(action=lambda: print_message("Cue 1: Hello!"))
-cue2 = Cue(action=lambda: print_message("Cue 2: This is a test."))
+Click "New App"
 
-manager = CueManager()
-manager.add_cue(cue1)
-manager.add_cue(cue2)
+Select your GitHub repo, branch, and point to app.py
 
-manager.run_cues()
+Click "Deploy" 🎉
 
-# example of custom cue usage
-manager_custom = CueManager()
-delayed_cue = DelayedMessageCue("Delayed message!", 2)
-manager_custom.add_cue(delayed_cue)
-manager_custom.run_cues()
+💡 Future Improvements
+🎯 Add filters for genre, language, release year
 
-### Example
+🧩 Incorporate collaborative filtering for hybrid recommendations
 
-Here's a basic example to illustrate how to use GenieCue:
+📱 Make layout responsive for mobile
 
-```python
-# example_usage.py
-from geniecue import Cue, CueManager
+🌐 Use TMDB API for live data fetching
 
-def print_message(message):
-    print(message)
+📊 Add popularity or rating scores to recommendations
 
-cue1 = Cue(action=lambda: print_message("Cue 1: Hello!"))
-cue2 = Cue(action=lambda: print_message("Cue 2: This is a test."))
+🤝 Contributing
+Contributions are welcome!
 
-manager = CueManager()
-manager.add_cue(cue1)
-manager.add_cue(cue2)
+Fork the repository
 
-manager.run_cues()
+Create your feature branch: git checkout -b feature/YourFeature
+
+Commit your changes: git commit -m "Add YourFeature"
+
+Push to the branch: git push origin feature/YourFeature
+
+Open a pull request
+
+📜 License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+🙌 Acknowledgements
+Streamlit for building fast, shareable Python apps
+
+Kaggle & TMDB for movie datasets
+
+Scikit-learn for ML utilities
+
+OpenAI ChatGPT for development assistance
+
+💬 Feedback & Contact
+Have feedback or suggestions?
+Reach out via LinkedIn or open an Issue.
+
+Made with ❤️ by Soumya
+
+
+---
+
+Let me know if you'd like a matching `LICENSE` file or if you'd like help creating a deployment link or a `demo.gif`.
